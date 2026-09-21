@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-const base = import.meta.env.BASE_URL;
+const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
 ---
 <BaseLayout title="Learning assessment — FrontierAGI Academy">
   <section class="page-hero container"><p class="eyebrow">Two-minute assessment</p><h1>Find the right place to begin.</h1><p>Choose the statement that best describes your primary goal.</p></section>

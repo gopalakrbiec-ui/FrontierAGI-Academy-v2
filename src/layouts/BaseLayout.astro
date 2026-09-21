@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
 const { title = 'FrontierAGI Academy', description = 'A curriculum-first guide to frontier artificial intelligence.' } = Astro.props;
-const base = import.meta.env.BASE_URL;
+const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
 ---
 <!doctype html>
 <html lang="en">

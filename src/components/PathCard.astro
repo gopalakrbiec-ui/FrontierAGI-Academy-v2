@@ -1,6 +1,6 @@
 ---
 const { path, count = 0 } = Astro.props;
-const base = import.meta.env.BASE_URL;
+const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
 ---
 <article class={`path-card path-${path.color}`}>
   <div class="path-icon" aria-hidden="true">{path.icon}</div>

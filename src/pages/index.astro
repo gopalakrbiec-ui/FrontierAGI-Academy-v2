@@ -5,7 +5,7 @@ import articles from '../data/articles.json';
 import { paths, pathFor } from '../data/paths.js';
 const counts = Object.fromEntries(paths.map(path => [path.id, articles.filter(article => pathFor(article) === path.id).length]));
 const latest = articles.slice(0, 3);
-const base = import.meta.env.BASE_URL;
+const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
 ---
 <BaseLayout title="FrontierAGI Academy — Learn the intelligence frontier">
   <section class="hero container">

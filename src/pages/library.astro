@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import articles from '../data/articles.json';
 import { paths, pathFor } from '../data/paths.js';
 const enriched = articles.map((article, index) => ({...article, path: pathFor(article), level: /foundations|primer|explained|evolution/i.test(article.title) ? 'Beginner' : /engineering|research|mathematical|systems/i.test(article.title) ? 'Advanced' : 'Intermediate', order:index }));
-const base = import.meta.env.BASE_URL;
+const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
 ---
 <BaseLayout title="Article library — FrontierAGI Academy">
   <section class="page-hero container"><p class="eyebrow">Knowledge library</p><h1>Search 105 investigations, lessons and field guides.</h1><p>Filter by curriculum path, difficulty or topic. Reading progress stays in your browser.</p></section>

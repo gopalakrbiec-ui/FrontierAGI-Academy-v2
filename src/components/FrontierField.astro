@@ -1,0 +1,10 @@
+<div class="frontier-field" aria-hidden="true">
+  <canvas id="frontier-canvas"></canvas>
+  <div class="orbit orbit-one"><span></span></div><div class="orbit orbit-two"><span></span></div><div class="orbit orbit-three"><span></span></div>
+  <div class="core"><i></i><b></b></div>
+  <div class="field-label label-reasoning">Reasoning</div><div class="field-label label-agents">Agents</div><div class="field-label label-world">World models</div><div class="field-label label-alignment">Alignment</div>
+</div>
+<script>
+  const canvas=document.querySelector('#frontier-canvas');
+  if(canvas instanceof HTMLCanvasElement){const context=canvas.getContext('2d'),reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;let points=[],frame=0,width=0,height=0;const resize=()=>{const ratio=Math.min(devicePixelRatio||1,2);width=canvas.clientWidth;height=canvas.clientHeight;canvas.width=width*ratio;canvas.height=height*ratio;context?.setTransform(ratio,0,0,ratio,0,0);points=Array.from({length:Math.min(90,Math.round(width/9))},(_,index)=>({x:Math.random()*width,y:Math.random()*height,vx:(Math.random()-.5)*.18,vy:(Math.random()-.5)*.18,phase:Math.random()*Math.PI*2,accent:index%11===0}))};const draw=()=>{if(!context)return;context.clearRect(0,0,width,height);for(let a=0;a<points.length;a++){const p=points[a];if(!reduced){p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>width)p.vx*=-1;if(p.y<0||p.y>height)p.vy*=-1}for(let b=a+1;b<points.length;b++){const q=points[b],distance=Math.hypot(p.x-q.x,p.y-q.y);if(distance<100){context.strokeStyle=`rgba(89,211,255,${(1-distance/100)*.12})`;context.beginPath();context.moveTo(p.x,p.y);context.lineTo(q.x,q.y);context.stroke()}}const pulse=reduced?1:.7+Math.sin(frame*.02+p.phase)*.3;context.fillStyle=p.accent?`rgba(167,139,250,${pulse})`:`rgba(81,214,255,${pulse*.55})`;context.beginPath();context.arc(p.x,p.y,p.accent?2.2:1.2,0,Math.PI*2);context.fill()}frame++;if(!reduced)requestAnimationFrame(draw)};new ResizeObserver(resize).observe(canvas);resize();draw()}
+</script>

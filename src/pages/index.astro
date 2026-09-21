@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import PathCard from '../components/PathCard.astro';
+import FrontierField from '../components/FrontierField.astro';
 import articles from '../data/articles.json';
 import { paths, pathFor } from '../data/paths.js';
 const counts = Object.fromEntries(paths.map(path => [path.id, articles.filter(article => pathFor(article) === path.id).length]));
@@ -8,13 +9,14 @@ const latest = articles.slice(0, 3);
 const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
 ---
 <BaseLayout title="FrontierAGI Academy — Learn the intelligence frontier">
-  <section class="hero container">
-    <div class="signal"><span></span> Curriculum-first AI education</div>
-    <h1>Understand frontier AI.<br/><em>Build what comes next.</em></h1>
-    <p class="hero-copy">A guided academy for learners, engineers, researchers and founders—built from 105 deeply researched articles and organized into practical learning paths.</p>
-    <div class="hero-actions"><a class="button primary" href={`${base}paths/`}>Choose a learning path</a><a class="button secondary" href={`${base}library/`}>Search the library</a></div>
-    <dl class="stats"><div><dt>{articles.length}</dt><dd>Long-form lessons</dd></div><div><dt>5</dt><dd>Guided pathways</dd></div><div><dt>8</dt><dd>Learner perspectives</dd></div><div><dt>Free</dt><dd>No login or paywall</dd></div></dl>
-  </section>
+  <section class="hero-shell"><div class="hero container"><div class="hero-content">
+    <div class="signal"><span></span> Mapping the intelligence frontier</div>
+    <h1><span class="reveal-line">Learn the systems</span><br/><em class="reveal-line delay-one">shaping tomorrow.</em></h1>
+    <p class="hero-copy reveal-copy">A living field guide to models, agents, research and the teams building them—organized into paths that take you from curiosity to capability.</p>
+    <div class="hero-actions reveal-copy"><a class="button primary" href={`${base}paths/`}>Enter the academy <span aria-hidden="true">↗</span></a><a class="button secondary" href={`${base}library/`}>Explore {articles.length} investigations</a></div>
+  </div><FrontierField /></div>
+  <div class="signal-tape"><div><span>Reasoning systems</span><i></i><span>Agentic loops</span><i></i><span>World models</span><i></i><span>Alignment</span><i></i><span>Compute infrastructure</span><i></i><span>Frontier labs</span><i></i><span>Reasoning systems</span><i></i><span>Agentic loops</span><i></i><span>World models</span><i></i></div></div></section>
+  <section class="stats-wrap"><dl class="stats container"><div><dt>{articles.length}</dt><dd>Long-form investigations</dd></div><div><dt>5</dt><dd>Guided pathways</dd></div><div><dt>8</dt><dd>Learner perspectives</dd></div><div><dt>∞</dt><dd>A frontier still moving</dd></div></dl></section>
 
   <section class="section container">
     <div class="section-heading"><div><p class="eyebrow">Start with your goal</p><h2>Five paths through the frontier</h2></div><a href={`${base}assessment/`}>Not sure? Take the assessment →</a></div>

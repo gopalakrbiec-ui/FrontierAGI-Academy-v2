@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PathCard from '../components/PathCard.astro';
+import articles from '../data/articles.json';
+import { paths, pathFor } from '../data/paths.js';
+const counts = Object.fromEntries(paths.map(path => [path.id, articles.filter(article => pathFor(article) === path.id).length]));
+const latest = articles.slice(0, 3);
+const base = import.meta.env.BASE_URL;
+---
+<BaseLayout title="FrontierAGI Academy — Learn the intelligence frontier">
+  <section class="hero container">
+    <div class="signal"><span></span> Curriculum-first AI education</div>
+    <h1>Understand frontier AI.<br/><em>Build what comes next.</em></h1>
+    <p class="hero-copy">A guided academy for learners, engineers, researchers and founders—built from 105 deeply researched articles and organized into practical learning paths.</p>
+    <div class="hero-actions"><a class="button primary" href={`${base}paths/`}>Choose a learning path</a><a class="button secondary" href={`${base}library/`}>Search the library</a></div>
+    <dl class="stats"><div><dt>{articles.length}</dt><dd>Long-form lessons</dd></div><div><dt>5</dt><dd>Guided pathways</dd></div><div><dt>8</dt><dd>Learner perspectives</dd></div><div><dt>Free</dt><dd>No login or paywall</dd></div></dl>
+  </section>
+
+  <section class="section container">
+    <div class="section-heading"><div><p class="eyebrow">Start with your goal</p><h2>Five paths through the frontier</h2></div><a href={`${base}assessment/`}>Not sure? Take the assessment →</a></div>
+    <div class="path-grid">{paths.map(path => <PathCard path={path} count={counts[path.id]} />)}</div>
+  </section>
+
+  <section class="section surface">
+    <div class="container">
+      <div class="section-heading"><div><p class="eyebrow">Recently published</p><h2>Latest frontier signals</h2></div><a href={`${base}library/`}>View all articles →</a></div>
+      <div class="latest-grid">{latest.map(article => <article class="article-card"><div class="article-top"><span>{article.emoji}</span><span>{article.readTime}</span></div><h3>{article.title}</h3><p>{article.excerpt}</p><div class="tag-row">{article.tags.slice(0,2).map(tag => <span>{tag}</span>)}</div><a class="card-link" href={`${base}archive/blog/${article.slug}.html`}>Read article <span aria-hidden="true">→</span></a></article>)}</div>
+    </div>
+  </section>
+
+  <section class="cta container"><p class="eyebrow">Make it personal</p><h2>Find your starting point in two minutes.</h2><p>Answer five questions and get a recommended path based on your background and goal.</p><a class="button primary" href={`${base}assessment/`}>Take the self-assessment</a></section>
+</BaseLayout>

@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL;
+---
+<BaseLayout title="Learning assessment — FrontierAGI Academy">
+  <section class="page-hero container"><p class="eyebrow">Two-minute assessment</p><h1>Find the right place to begin.</h1><p>Choose the statement that best describes your primary goal.</p></section>
+  <section class="assessment container">
+    <form id="assessment-form">
+      <fieldset><legend>What do you most want to accomplish?</legend><label><input type="radio" name="goal" value="foundations" required /> Understand how modern AI works from first principles</label><label><input type="radio" name="goal" value="engineering" /> Build reliable applications with language models</label><label><input type="radio" name="goal" value="research" /> Follow or contribute to frontier research</label><label><input type="radio" name="goal" value="builder" /> Build a team, product or AI company</label><label><input type="radio" name="goal" value="landscape" /> Understand labs, markets, policy and global competition</label></fieldset>
+      <button class="button primary" type="submit">Show my recommendation</button>
+    </form>
+    <div id="assessment-result" class="assessment-result" hidden aria-live="polite"></div>
+  </section>
+  <script define:vars={{ base }}>
+    const form=document.querySelector('#assessment-form'),result=document.querySelector('#assessment-result');
+    const names={foundations:'AI Foundations',engineering:'LLM Engineering',research:'Frontier Research',builder:'AI Builder',landscape:'AI Landscape'};
+    form.addEventListener('submit',e=>{e.preventDefault();const id=new FormData(form).get('goal');result.hidden=false;result.innerHTML=`<p class="eyebrow">Recommended path</p><h2>${names[id]}</h2><p>This route best matches your current goal. You can change direction at any point without losing your completed-article history.</p><a class="button primary" href="${base}library/?path=${id}">Open this path</a>`;result.scrollIntoView({behavior:'smooth'});});
+  </script>
+</BaseLayout>

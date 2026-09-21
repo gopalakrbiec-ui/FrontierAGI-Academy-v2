@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import articles from '../data/articles.json';
+import { paths, pathFor } from '../data/paths.js';
+const enriched = articles.map((article, index) => ({...article, path: pathFor(article), level: /foundations|primer|explained|evolution/i.test(article.title) ? 'Beginner' : /engineering|research|mathematical|systems/i.test(article.title) ? 'Advanced' : 'Intermediate', order:index }));
+const base = import.meta.env.BASE_URL;
+---
+<BaseLayout title="Article library — FrontierAGI Academy">
+  <section class="page-hero container"><p class="eyebrow">Knowledge library</p><h1>Search 105 investigations, lessons and field guides.</h1><p>Filter by curriculum path, difficulty or topic. Reading progress stays in your browser.</p></section>
+  <section class="library container" data-base={base}>
+    <div class="filter-bar">
+      <label class="search"><span class="sr-only">Search articles</span><input id="article-search" type="search" placeholder="Search models, concepts, labs…" autocomplete="off" /></label>
+      <select id="path-filter" aria-label="Filter by learning path"><option value="">All paths</option>{paths.map(path => <option value={path.id}>{path.title}</option>)}</select>
+      <select id="level-filter" aria-label="Filter by difficulty"><option value="">All levels</option><option>Beginner</option><option>Intermediate</option><option>Advanced</option></select>
+      <select id="sort-filter" aria-label="Sort articles"><option value="newest">Newest</option><option value="title">A–Z</option><option value="shortest">Shortest first</option></select>
+    </div>
+    <p id="result-count" class="result-count" aria-live="polite"></p>
+    <div id="article-grid" class="library-grid"></div>
+  </section>
+  <script define:vars={{ enriched }}>
+    const articles = enriched;
+    const base = document.querySelector('.library').dataset.base;
+    const grid = document.querySelector('#article-grid');
+    const count = document.querySelector('#result-count');
+    const search = document.querySelector('#article-search');
+    const path = document.querySelector('#path-filter');
+    const level = document.querySelector('#level-filter');
+    const sort = document.querySelector('#sort-filter');
+    const params = new URLSearchParams(location.search);
+    if (params.get('path')) path.value = params.get('path');
+    const completed = new Set(JSON.parse(localStorage.getItem('frontieragi-completed') || '[]'));
+    const esc = value => String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[char]));
+    function render(){
+      const q=search.value.trim().toLowerCase();
+      let items=articles.filter(a=>(!q||`${a.title} ${a.excerpt} ${a.tags.join(' ')}`.toLowerCase().includes(q))&&(!path.value||a.path===path.value)&&(!level.value||a.level===level.value));
+      if(sort.value==='title') items.sort((a,b)=>a.title.localeCompare(b.title));
+      if(sort.value==='shortest') items.sort((a,b)=>parseInt(a.readTime)-parseInt(b.readTime));
+      count.textContent=`${items.length} article${items.length===1?'':'s'}`;
+      grid.innerHTML=items.map(a=>`<article class="library-card"><div class="article-top"><span>${esc(a.emoji||'◉')} ${esc(a.level)}</span><span>${esc(a.readTime)}</span></div><h2>${esc(a.title)}</h2><p>${esc(a.excerpt)}</p><div class="tag-row">${a.tags.slice(0,2).map(t=>`<span>${esc(t)}</span>`).join('')}</div><div class="library-actions"><a href="${base}archive/blog/${encodeURIComponent(a.slug)}.html">Read article →</a><button class="complete" data-slug="${esc(a.slug)}" aria-pressed="${completed.has(a.slug)}">${completed.has(a.slug)?'✓ Completed':'Mark complete'}</button></div></article>`).join('');
+      grid.querySelectorAll('.complete').forEach(btn=>btn.addEventListener('click',()=>{completed.has(btn.dataset.slug)?completed.delete(btn.dataset.slug):completed.add(btn.dataset.slug);localStorage.setItem('frontieragi-completed',JSON.stringify([...completed]));render();}));
+    }
+    [search,path,level,sort].forEach(el=>el.addEventListener(el===search?'input':'change',render)); render();
+  </script>
+</BaseLayout>

@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PathCard from '../components/PathCard.astro';
+import articles from '../data/articles.json';
+import { paths, pathFor } from '../data/paths.js';
+const counts = Object.fromEntries(paths.map(path => [path.id, articles.filter(article => pathFor(article) === path.id).length]));
+---
+<BaseLayout title="Learning paths — FrontierAGI Academy">
+  <section class="page-hero container"><p class="eyebrow">Guided curriculum</p><h1>Choose the route that matches your goal.</h1><p>Every path moves from orientation to deeper practice. Switch paths whenever your goal changes.</p></section>
+  <section class="section container"><div class="path-grid">{paths.map(path => <PathCard path={path} count={counts[path.id]} />)}</div></section>
+  <section class="section container"><div class="principles"><article><span>01</span><h3>Start with context</h3><p>Each route establishes the vocabulary and mental models required by later lessons.</p></article><article><span>02</span><h3>Learn by layers</h3><p>Difficulty and prerequisites make it clear when to move deeper or revisit foundations.</p></article><article><span>03</span><h3>Verify the frontier</h3><p>Time-sensitive material carries source, uncertainty and review expectations.</p></article></div></section>
+</BaseLayout>

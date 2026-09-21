@@ -1,0 +1,42 @@
+---
+import '../styles/global.css';
+const { title = 'FrontierAGI Academy', description = 'A curriculum-first guide to frontier artificial intelligence.' } = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#07101f" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <a class="brand" href={base}><span class="brand-mark">F</span><span>FrontierAGI <b>Academy</b></span></a>
+      <nav aria-label="Primary navigation">
+        <a href={`${base}paths/`}>Learning paths</a>
+        <a href={`${base}library/`}>Library</a>
+        <a href={`${base}assessment/`}>Assessment</a>
+        <button id="motion-toggle" class="quiet-button" type="button" aria-pressed="false">Reduce motion</button>
+      </nav>
+    </header>
+    <main id="main"><slot /></main>
+    <footer>
+      <div><strong>FrontierAGI Academy</strong><p>Learn the systems shaping the intelligence frontier.</p></div>
+      <div><a href={`${base}editorial/`}>Editorial standards</a><a href={`${base}library/`}>Article library</a></div>
+    </footer>
+    <script is:inline>
+      const key = 'frontieragi-reduce-motion';
+      const btn = document.querySelector('#motion-toggle');
+      const apply = (on) => { document.documentElement.dataset.reduceMotion = on ? 'true' : 'false'; btn?.setAttribute('aria-pressed', String(on)); if (btn) btn.textContent = on ? 'Enable motion' : 'Reduce motion'; };
+      apply(localStorage.getItem(key) === 'true');
+      btn?.addEventListener('click', () => { const on = document.documentElement.dataset.reduceMotion !== 'true'; localStorage.setItem(key, String(on)); apply(on); });
+    </script>
+  </body>
+</html>

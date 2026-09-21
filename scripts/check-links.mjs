@@ -17,6 +17,9 @@ async function walk(directory) {
 
 for (const file of (await walk(dist)).filter(file => file.endsWith('.html'))) {
   const html = await readFile(file, 'utf8');
+  if (path.relative(dist, file).startsWith(`archive${path.sep}`) && html.includes('href="../index.html"')) {
+    errors.push(`${path.relative(dist, file)}: legacy homepage link was not migrated`);
+  }
   for (const match of html.matchAll(/href=["']([^"'#?]+)["']/g)) {
     const href = match[1];
     if (href.startsWith('/FrontierAGI-Academy-v2') && !href.startsWith(base)) {

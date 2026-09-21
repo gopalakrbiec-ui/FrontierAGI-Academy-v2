@@ -21,7 +21,7 @@ for(const item of selected){
   const target=path.join('public','archive',item.path);
   await mkdir(path.dirname(target),{recursive:true});
   let body=Buffer.from(await (await get(`${raw}/${item.path}`)).arrayBuffer());
-  if(item.path.endsWith('.html')){let html=body.toString('utf8');const bridge='\n<link rel="stylesheet" href="../../article-v2.css" />\n<script src="../../article-v2.js" defer></script>\n';html=html.replace('</head>',`${bridge}</head>`).replace('<body','<body data-v2-article="true"');body=Buffer.from(html,'utf8')}
+  if(item.path.endsWith('.html')){let html=body.toString('utf8');const bridge='\n<link rel="stylesheet" href="../../article-v2.css" />\n<script src="../../article-v2.js" defer></script>\n';html=html.replaceAll('href="../index.html"','href="../../"').replace('</head>',`${bridge}</head>`).replace('<body','<body data-v2-article="true"');body=Buffer.from(html,'utf8')}
   await writeFile(target,body); copied++;
 }
 console.log(`Synced ${manifest.posts.length} articles and ${copied} legacy assets.`);
